@@ -31,23 +31,31 @@ header{display:flex;gap:12px;align-items:center;padding:24px 28px;border-bottom:
 .brand{font-size:20px;font-weight:800;line-height:1.2;text-transform:uppercase}
 .event{margin-top:5px;font-size:11px;letter-spacing:.12em;font-weight:700;color:var(--cp-border-strong);text-transform:uppercase}
 main{padding:28px}
-.eyebrow{margin:0;color:var(--cp-lilac);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
-h1{font-size:clamp(28px,6vw,36px);line-height:1.12;margin:10px 0 16px}
+h1{font-size:clamp(28px,6vw,36px);line-height:1.12;margin:0 0 12px}
 h1 span{color:var(--cp-accent)}
 .intro,.notice,.note{color:var(--cp-text-muted)}
-.intro{margin:0 0 24px}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 12px}
+.intro{margin:0 0 20px}
+.actions{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:16px 0 12px}
 button,.button{min-height:48px;padding:12px 16px;border:2px solid var(--cp-text);border-radius:10px;font:700 15px/1.3 "Segoe UI",Aptos,Calibri,sans-serif;text-decoration:none;cursor:pointer;background:var(--cp-surface);color:var(--cp-text);display:inline-flex;align-items:center;justify-content:center;text-align:center;touch-action:manipulation}
 .primary{background:var(--cp-accent);color:var(--cp-bg);box-shadow:3px 3px 0 var(--cp-border-strong)}
 .primary:hover{background:var(--cp-accent-hover)}
+.text-action{min-height:44px;background:transparent;border:0;box-shadow:none;padding:10px 12px;color:var(--cp-accent-hover);font-size:14px;font-weight:600;text-decoration:underline}
+.utility-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.utility-actions button{font-size:13px}
+summary{display:flex;align-items:center;gap:8px;min-height:44px;padding:10px 0;cursor:pointer;color:var(--cp-accent-hover);font-size:14px;font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'+';font-size:18px}
+details[open]>summary::before{content:'-'}
+#emailTools{border-top:1px solid var(--cp-border);margin-top:16px}
 a{color:var(--cp-accent-hover);overflow-wrap:anywhere}
-button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid var(--cp-lime);outline-offset:4px}
+button:focus-visible,a:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--cp-lime);outline-offset:4px}
 .note,.notice{font-size:13px;margin:8px 0}
 .email-subject{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:16px 0;font-size:13px;color:var(--cp-text-muted)}
 .email-subject strong{display:block;color:var(--cp-text);font-size:14px}
 .email-subject button{font-size:13px;padding:8px 12px}
 .email-selection{margin:12px 0;padding:16px;border:1px solid var(--cp-border-strong);border-radius:10px;user-select:text;-webkit-user-select:text}
-#status{min-height:1.6em;margin:12px 0;font-size:14px;color:var(--cp-lime)}
+#status{margin:12px 0;font-size:14px;color:var(--cp-lime)}
+#status:empty{margin:0}
 #manual label{display:block;font-size:14px;font-weight:700}
 textarea{display:block;width:100%;min-height:180px;margin:8px 0 16px;padding:12px;background:var(--cp-bg-elevated);border:1px solid var(--cp-border-strong);border-radius:10px;color:var(--cp-text);font:16px/1.5 Consolas,"Courier New",monospace}
 .list-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--cp-border);margin:28px 0 18px;padding-bottom:8px}
@@ -78,25 +86,31 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
     <div><div class="brand">Credentials Corner</div><div class="event">Microsoft Ignite 2026</div></div>
   </header>
   <main>
-    <p class="eyebrow">Your crate is packed</p>
-    <h1>Your tracks. <span>Your next move.</span></h1>
     <section id="empty" hidden><h2>Your crate is empty</h2><p>Scan the QR code on the kiosk's My crate screen to bring your selected tracks here.</p><a class="button store-link" href="./">Explore Credentials Corner</a></section>
     <section id="invalid" hidden role="alert"><h2>This crate link could not be opened</h2><p id="invalidText">Please scan the code again or build a new crate in Credentials Corner.</p><a class="button store-link" href="./">Explore Credentials Corner</a></section>
     <section id="content" hidden aria-label="Your selected tracks">
-      <p class="intro">Thanks for visiting Credentials Corner. Your selected credentials are listed below. Individual credential links are included when you copy or share your email.</p>
+      <h1>Your crate <span>is ready.</span></h1>
+      <p class="intro">Email it to yourself or share it.</p>
       <div class="actions">
-        <button id="copyBtn" class="primary" type="button">Copy formatted email</button>
-        <button id="shareBtn" type="button" hidden>Share credential links</button>
-        <button id="copyTextBtn" type="button">Copy text with links</button>
-        <button id="copyLinkBtn" type="button">Copy crate link</button>
+        <button id="shareBtn" class="primary" type="button" hidden>Share my crate</button>
+        <button id="copyBtn" class="text-action" type="button">Copy email instead</button>
       </div>
-      <p class="note">For clean, clickable credential names, use Copy formatted email and keep the formatting when pasting into Mail or Outlook. If your email app strips the links, use Copy text with links instead.</p>
-      <div class="email-subject"><div>Subject<strong id="emailSubject"></strong></div><button id="copySubjectBtn" type="button">Copy subject</button></div>
-      <p class="note" id="shareHelp">Share includes each credential's full link in plain text. Your email app controls whether URLs become clickable and may require you to paste the subject separately.</p>
-      <p class="notice">No email address is requested or stored by this page. Your selected tracks stay in the link after the # and are not sent to the hosting server. Anyone you share the link with can see this tracklist.</p>
+      <p class="note" id="shareHelp" hidden>Sharing is not available in this browser. Copy your email, then paste it into Mail or Outlook.</p>
       <p id="status" role="status" aria-live="polite"></p>
+      <section id="emailTools" aria-label="Email help" hidden>
+        <details id="recovery">
+          <summary>Subject and other options</summary>
+          <div class="email-subject"><div>Subject<strong id="emailSubject"></strong></div><button id="copySubjectBtn" type="button">Copy subject</button></div>
+          <p class="note">Paste the email body before copying the subject. If your email app removes the links, copy the text version instead.</p>
+          <div class="utility-actions">
+            <button id="copyTextBtn" type="button">Copy text with links</button>
+            <button id="copyLinkBtn" class="text-action" type="button">Copy crate link</button>
+          </div>
+          <p class="note">Sharing uses full URLs. Your email app controls whether they become clickable and may need the subject pasted separately.</p>
+        </details>
+      </section>
       <div id="manual" hidden><label for="manualText">Select and copy below</label><textarea id="manualText" readonly spellcheck="false"></textarea></div>
-      <div id="manualEmail" hidden><p class="note">Automatic formatted copying is unavailable. Select and copy the formatted message below, then paste into your email. If your app removes the links, use Copy text with links above.</p><div id="emailSelection" class="email-selection" tabindex="0" role="region" aria-label="Formatted email to select and copy"></div></div>
+      <div id="manualEmail" hidden><p class="note">Select and copy this email, then paste it into your email app. For plain-text links, open Subject and other options above.</p><div id="emailSelection" class="email-selection" tabindex="0" role="region" aria-label="Formatted email to select and copy"></div></div>
       <div class="list-head"><h2>Your tracklist</h2><span id="count"></span></div>
       <ol id="tracks"></ol>
       <section class="next"><h2>Make it yours</h2><p>Explore the general AI Skills Navigator catalog to find what to play next.</p><a id="asnLink" class="button primary" href="https://aiskillsnavigator.microsoft.com/en-us/credentials" target="_blank" rel="noopener noreferrer">Browse the ASN catalog</a></section>
@@ -105,7 +119,7 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
     <noscript><p>Enable JavaScript to display the tracks included in your crate link.</p></noscript>
   </main>
 </div></div>
-<footer>This page has no analytics or account sign-in. GitHub Pages serves the page and may keep standard access logs; it does not receive the selected tracks in the URL fragment. Track availability can change.<br><a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener noreferrer">Microsoft Privacy Statement</a> &middot; <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a></footer>
+<footer><p>No email address is collected here.</p><details id="privacy"><summary>Privacy details</summary><p>No analytics or account sign-in. Your selected tracks stay in the link after the # and are not sent to the hosting server. Anyone you share the link with can see this tracklist. GitHub Pages may keep standard access logs. Track availability can change.</p><a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener noreferrer">Microsoft Privacy Statement</a> &middot; <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a></details></footer>
 <script>
 (() => {
   'use strict';
@@ -113,7 +127,7 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
   const SUBJECT = 'Ignite Credentials Corner: Your crate';
   const TYPE = {cert: 'Certification exam', skill: 'Applied Skill', pro: 'Pro Badge'};
   const $ = id => document.getElementById(id);
-  let selected = [], crateUrl = '';
+  let selected = [], crateUrl = '', revision = 0;
   document.querySelectorAll('.store-link').forEach(a => { a.href = CONFIG.storeUrl; });
   $('asnLink').href = CONFIG.asnCatalog;
   $('emailSubject').textContent = SUBJECT;
@@ -163,7 +177,9 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
   function render() {
     selected = [];
     crateUrl = '';
-    ['empty', 'invalid', 'content', 'manual', 'manualEmail'].forEach(id => { $(id).hidden = true; });
+    revision++;
+    ['empty', 'invalid', 'content', 'manual', 'manualEmail', 'emailTools'].forEach(id => { $(id).hidden = true; });
+    $('recovery').open = false;
     $('tracks').replaceChildren();
     $('emailSelection').replaceChildren();
     $('manualText').value = '';
@@ -203,31 +219,48 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
     $('content').hidden = false;
     const canShare = typeof navigator.share === 'function';
     $('shareBtn').hidden = !canShare;
-    $('shareHelp').textContent = canShare ?
-      "Share includes each credential's full link in plain text. Your email app controls whether URLs become clickable and may require you to paste the subject separately." :
-      'Sharing is not available in this browser. Use Copy formatted email or Copy text with links, then paste into your email app.';
+    $('shareHelp').hidden = canShare;
+    $('copyBtn').textContent = canShare ? 'Copy email instead' : 'Copy email';
+    $('copyBtn').className = canShare ? 'text-action' : 'primary';
+  }
+  function resetExportHelp() {
+    ['manual', 'manualEmail', 'emailTools'].forEach(id => { $(id).hidden = true; });
+    $('recovery').open = false;
+    status('');
+  }
+  function showEmailTools(open = false) {
+    $('emailTools').hidden = false;
+    $('recovery').open = open;
   }
   $('shareBtn').addEventListener('click', async () => {
     if (!selected.length) return;
-    $('manual').hidden = true;
+    const current = revision;
+    resetExportHelp();
     try {
       await navigator.share({title: SUBJECT, text: trackText(), url: crateUrl});
+      if (current !== revision) return;
+      showEmailTools();
       status('Share menu closed. Check the app you chose to finish sending.');
     } catch (error) {
+      if (current !== revision) return;
       if (error.name === 'AbortError') { status('Sharing canceled. Your crate is still here.'); return; }
       console.warn('Crate sharing failed:', error.name);
-      status('Sharing could not open. Use Copy formatted email or Copy text with links instead.');
+      showEmailTools(true);
+      status('Sharing could not open. Use Copy email instead, or copy text with links below.');
     }
   });
   async function copy(text, label) {
+    const current = revision;
     $('manual').hidden = true;
     $('manualEmail').hidden = true;
     if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
       try {
         await navigator.clipboard.writeText(text);
+        if (current !== revision) return;
         status(label + ' copied. Paste it into your email or messages.');
         return;
       } catch (error) {
+        if (current !== revision) return;
         console.warn('Clipboard access failed:', error.name);
         status('Clipboard access was blocked. Select and copy the text below.');
       }
@@ -241,8 +274,8 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
   }
   $('copyBtn').addEventListener('click', async () => {
     if (!selected.length) return;
-    $('manual').hidden = true;
-    $('manualEmail').hidden = true;
+    const current = revision;
+    resetExportHelp();
     const message = formattedEmail();
     if (navigator.clipboard && typeof navigator.clipboard.write === 'function' && typeof ClipboardItem === 'function') {
       try {
@@ -251,12 +284,16 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
           'text/html': new Blob([message.outerHTML], {type: 'text/html'}),
           'text/plain': new Blob([plainEmail()], {type: 'text/plain'})
         })]);
-        status('Formatted email copied. Paste into your email body and keep the formatting. Use Copy subject for the subject line.');
+        if (current !== revision) return;
+        showEmailTools();
+        status('Email copied. Paste into Mail or Outlook and keep the formatting.');
         return;
       } catch (error) {
+        if (current !== revision) return;
         console.warn('Formatted clipboard access failed:', error.name);
       }
     }
+    showEmailTools(true);
     $('emailSelection').replaceChildren(message);
     $('manualEmail').hidden = false;
     $('emailSelection').focus();
