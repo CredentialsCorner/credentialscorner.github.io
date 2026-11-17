@@ -59,9 +59,7 @@ ol{padding:0;margin:0;list-style:none}
 .track.pro{--track-accent:var(--cp-lime)}
 .pill{display:inline-block;margin-bottom:10px;padding:5px 9px;border-radius:6px;background:var(--track-accent);color:var(--cp-bg);font-size:12px;font-weight:800;letter-spacing:.03em}
 .track h3{margin:0;font-size:18px;line-height:1.35}
-.track h3 a{display:block;min-height:44px;padding:8px 0;color:var(--cp-text);text-decoration:underline}
 .type{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--track-accent);margin:8px 0}
-.open{display:inline-flex;align-items:center;min-height:44px;padding:8px 0;font-size:14px;font-weight:600}
 .next{margin-top:28px;padding-top:20px;border-top:1px solid var(--cp-border)}
 .next h2{font-size:21px;margin:0 0 8px}
 .next p{color:var(--cp-text-muted);margin:0 0 16px}
@@ -85,7 +83,7 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
     <section id="empty" hidden><h2>Your crate is empty</h2><p>Scan the QR code on the kiosk's My crate screen to bring your selected tracks here.</p><a class="button store-link" href="./">Explore Credentials Corner</a></section>
     <section id="invalid" hidden role="alert"><h2>This crate link could not be opened</h2><p id="invalidText">Please scan the code again or build a new crate in Credentials Corner.</p><a class="button store-link" href="./">Explore Credentials Corner</a></section>
     <section id="content" hidden aria-label="Your selected tracks">
-      <p class="intro">Thanks for visiting Credentials Corner. Tap any credential name below to open its individual page on AI Skills Navigator.</p>
+      <p class="intro">Thanks for visiting Credentials Corner. Your selected credentials are listed below. Individual credential links are included when you copy or share your email.</p>
       <div class="actions">
         <button id="copyBtn" class="primary" type="button">Copy formatted email</button>
         <button id="shareBtn" type="button" hidden>Share credential links</button>
@@ -194,15 +192,11 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
       const pill = document.createElement('span');
       pill.className = 'pill';
       pill.textContent = c.type === 'pro' ? 'PRO BADGE' : c.pill;
-      const heading = document.createElement('h3'), link = document.createElement('a');
-      link.href = c.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = c.name;
-      heading.appendChild(link);
+      const heading = document.createElement('h3');
+      heading.textContent = c.name;
       const type = document.createElement('p');
       type.className = 'type'; type.textContent = TYPE[c.type];
-      const open = document.createElement('a');
-      open.className = 'open'; open.href = c.url; open.target = '_blank'; open.rel = 'noopener noreferrer';
-      open.textContent = 'Open on AI Skills Navigator \u203a';
-      li.append(pill, heading, type, open);
+      li.append(pill, heading, type);
       $('tracks').appendChild(li);
     }
     $('count').textContent = selected.length + (selected.length === 1 ? ' track' : ' tracks');
