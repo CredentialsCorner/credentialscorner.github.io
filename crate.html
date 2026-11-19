@@ -36,6 +36,8 @@ h1 span{color:var(--cp-accent)}
 .intro,.notice,.note{color:var(--cp-text-muted)}
 .intro{margin:0 0 20px}
 .actions{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:16px 0 12px}
+.share-instructions{margin:12px 0 0;color:var(--cp-text-muted);font-size:15px;line-height:1.5}
+.share-instructions b{color:var(--cp-text)}
 .crate-top{display:grid;grid-template-columns:minmax(0,1fr) 208px;gap:24px;align-items:start}
 .phone-handoff{margin:0;text-align:center}
 .phone-handoff svg{display:block;width:100%;height:auto;border-radius:8px}
@@ -96,16 +98,16 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
     <section id="content" hidden aria-label="Your selected tracks">
       <div class="crate-top"><div>
       <h1>Your crate <span>is ready.</span></h1>
-      <p class="intro">Email it to yourself or share it.</p>
+      <p class="intro">Text or email yourself your credential links.</p>
       <div class="actions">
-        <button id="shareBtn" class="primary" type="button" hidden>Share my crate</button>
-        <button id="copyBtn" class="text-action" type="button">Copy email instead</button>
+        <button id="shareBtn" class="primary" type="button" aria-describedby="shareInstructions">Share my crate</button>
       </div>
+      <p id="shareInstructions" class="share-instructions">Tap <b>Share my crate</b>, choose <b>Messages</b> (text) or <b>Mail/Outlook</b> (email), add yourself or another recipient, then send. Your message includes a learning link for each credential.</p>
       </div><figure id="phoneHandoff" class="phone-handoff" hidden>
         <div id="phoneQr"></div>
         <figcaption id="phoneQrCaption">Scan to open on your phone</figcaption>
       </figure></div>
-      <p class="note" id="shareHelp" hidden>Sharing is not available in this browser. Copy your email, then paste it into Mail or Outlook.</p>
+      <p class="note" id="shareHelp" hidden>Sharing is not available in this browser. On desktop, scan the QR with your phone, or tap Share my crate for copy options.</p>
       <p id="status" role="status" aria-live="polite"></p>
       <section id="emailTools" aria-label="Email help" hidden>
         <details id="recovery">
@@ -113,6 +115,7 @@ footer a{display:inline-block;min-height:44px;padding:12px 0}
           <div class="email-subject"><div>Subject<strong id="emailSubject"></strong></div><button id="copySubjectBtn" type="button">Copy subject</button></div>
           <p class="note">Paste the email body before copying the subject. If your email app removes the links, copy the text version instead.</p>
           <div class="utility-actions">
+            <button id="copyBtn" type="button">Copy formatted links</button>
             <button id="copyTextBtn" type="button">Copy text with links</button>
             <button id="copyLinkBtn" class="text-action" type="button">Copy crate link</button>
           </div>
@@ -2531,11 +2534,7 @@ var qrcode = function() {
     }
     $('count').textContent = selected.length + (selected.length === 1 ? ' track' : ' tracks');
     $('content').hidden = false;
-    const canShare = typeof navigator.share === 'function';
-    $('shareBtn').hidden = !canShare;
-    $('shareHelp').hidden = canShare;
-    $('copyBtn').textContent = canShare ? 'Copy email instead' : 'Copy email';
-    $('copyBtn').className = canShare ? 'text-action' : 'primary';
+    $('shareHelp').hidden = typeof navigator.share === 'function';
   }
   function resetExportHelp() {
     ['manual', 'manualEmail', 'emailTools'].forEach(id => { $(id).hidden = true; });
@@ -2550,17 +2549,22 @@ var qrcode = function() {
     if (!selected.length) return;
     const current = revision;
     resetExportHelp();
+    if (typeof navigator.share !== 'function') {
+      showEmailTools(true);
+      status('Sharing is unavailable here. Copy text with links below, paste into a text message or email, then send.');
+      return;
+    }
     try {
       await navigator.share({title: SUBJECT, text: trackText(), url: crateUrl});
       if (current !== revision) return;
       showEmailTools();
-      status('Share menu closed. Check the app you chose to finish sending.');
+      status('Share menu closed. In Messages or your email app, add a recipient and finish sending to keep your credential links.');
     } catch (error) {
       if (current !== revision) return;
       if (error.name === 'AbortError') { status('Sharing canceled. Your crate is still here.'); return; }
       console.warn('Crate sharing failed:', error.name);
       showEmailTools(true);
-      status('Sharing could not open. Use Copy email instead, or copy text with links below.');
+      status('Sharing could not open. Copy text with links below, paste into a text message or email, then send.');
     }
   });
   async function copy(text, label) {
@@ -2600,6 +2604,7 @@ var qrcode = function() {
         })]);
         if (current !== revision) return;
         showEmailTools();
+        $('recovery').querySelector('summary').focus();
         status('Email copied. Paste into Mail or Outlook and keep the formatting.');
         return;
       } catch (error) {
