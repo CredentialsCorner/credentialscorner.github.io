@@ -5450,7 +5450,8 @@ ACT.hotbox = () => { const d = $('#dlg'); if (d.open) d.close(); go('boxset', {i
 const PROMO_OF = {'DP-420': ['preorder', 'glow'], 'DP-800': ['pins', 'deluxe'], 'DP-300': ['deluxe'], 'DP-600': ['pins'], 'DP-700': ['pins'], 'PL-300': ['pins'], 'PB-GHCP': ['github-hat']};
 SCREENS.detail = p => {
   const code = p.code, c = CRED[code], g = GENRE[c.genre], acc = ACCENT[c.genre], src = COVER[code];
-  const chips = [`<span class="dchip t">${esc(C.TYPE_LABEL[c.type])}</span>`, c.level && c.level.toLowerCase() !== String(C.TYPE_LABEL[c.type]).toLowerCase() ? `<span class="dchip">${esc(c.level)}</span>` : '', `<span class="dchip g">${esc(GEN_SHORT[c.genre])}</span>`,
+  const detailName = c.type === 'cert' ? c.examTitle : c.name;
+  const chips = [`<span class="dchip t">${esc(c.type === 'cert' ? 'Exam' : C.TYPE_LABEL[c.type])}</span>`, c.level && c.level.toLowerCase() !== String(C.TYPE_LABEL[c.type]).toLowerCase() ? `<span class="dchip">${esc(c.level)}</span>` : '', `<span class="dchip g">${esc(GEN_SHORT[c.genre])}</span>`,
     c.state === 'beta' ? '<span class="dchip">Beta</span>' : '', c.state === 'retiring' ? '<span class="dchip">Retires Nov 30</span>' : '',
     c.tags.indexOf('new') > -1 ? '<span class="dchip" style="border-color:#49c5b1;color:#49c5b1">New</span>' : '', c.tags.indexOf('remastered') > -1 ? '<span class="dchip" style="border-color:#d4ec8e;color:#d4ec8e">Remastered</span>' : ''].join('');
   const promos = (PROMO_OF[code] || []).map(id => M.promos.find(x => x.id === id)).filter(Boolean).map(pr => `<div class="d-promo">${ico(pr.icon, 'pi')}<div><b>${esc(pr.label)}</b><p>${esc(pr.text)}</p></div>${pr.id === 'glow' && M.onsite ? '<button class="btn mg" data-act="promo" data-id="glow">How to sign up</button>' : pr.url ? `<button class="btn mg" data-act="promo" data-id="${esc(pr.id)}">How to claim</button>` : ''}</div>`).join('');
@@ -5460,7 +5461,7 @@ SCREENS.detail = p => {
     <div class="d-left"><div class="sleeve3d"><div class="vinyl">${C.msFlat ? C.msFlat('vlogo') : ''}</div><div class="cv">${src ? `<img alt="" src="${src}">` : ''}<span class="scr"></span><span class="nm n${c.name.length <= 34 ? 1 : c.name.length <= 62 ? 2 : 3}">${esc(c.name)}</span>${c.type === 'pro' ? '' : `<span class="pill">${esc(c.pill)}</span>`}${C.msMini ? C.msMini("smark") : ""}</div></div></div>
     <div class="d-right"><div class="d-chips">${chips}</div>
       <h1 class="d-how">${esc(c.how)}</h1>
-      <p class="d-name">${c.type === 'pro' ? '' : `<b>${esc(c.pill)}</b>`}${esc(c.name)}</p><p class="d-kind">${esc(C.TYPE_PLAIN[c.type])}${note ? ' ' + esc(note) : ''}${C.known(code) ? ' Already in your collection; add to your crate only if you want to keep it as a reference.' : ''}</p>
+      <p class="d-name">${c.type === 'pro' ? '' : `<b>${esc(c.pill)}</b>`}${esc(detailName)}</p><p class="d-kind">${esc(C.TYPE_PLAIN[c.type])}${note ? ' ' + esc(note) : ''}${C.known(code) ? ' Already in your collection; add to your crate only if you want to keep it as a reference.' : ''}</p>
       <div class="www"><div><h4>Who</h4><p>${esc(c.who)}</p></div><div><h4>What</h4><p>${esc(c.what)}</p></div><div><h4>Why</h4><p>${esc(c.why)}</p></div></div>
       ${promos}
       <div class="d-lower"><div class="d-pairs">${pairs.length ? `<h4>Pairs well with</h4><div class="row">${pairs.map(x => tile(x, {mini: true})).join('')}</div>` : ''}</div>
